@@ -16,15 +16,15 @@ public class MainActivity extends AppCompatActivity {
     //first String: web address
     //second void: usually a function for displaying, no fun here so void
     //third String: things to return. Here we just return the web address so String
-    public class Download extends AsyncTask<String, Void, String>{
+    public class DownloadTasks extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... urls) {
+            String result="";
 
-            String result = "";
             URL url;
 
-            HttpURLConnection urlConnection = null; //consider as a browser
+            HttpURLConnection urlConnection = null;
 
             try{
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
                 int data = reader.read();
 
-                while(data != 1){
+                while (data!=-1){
 
                     char current = (char) data;
 
@@ -47,21 +47,18 @@ public class MainActivity extends AppCompatActivity {
                     data = reader.read();
 
                 }
-
                 return result;
 
-            }catch (Exception e){
-
+            }
+            catch (Exception e){
                 e.printStackTrace();
 
-                return "Failed";
-
-
-            }finally {
-                urlConnection.disconnect();
+                return "failed";
             }
 
         }
+
+
 
     }
 
@@ -70,18 +67,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Download task = new Download();
+        DownloadTasks task = new DownloadTasks();
         String result = null;
         try {
-            result = task.execute("https://www.ecowebhosting.co.uk").get();
+            result = task.execute("https://www.ecowebhosting.co.uk/").get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-
-        Log.i("Content of URL", result);
+        Log.i("Result", result);
 
     }
 }
